@@ -295,11 +295,12 @@ namespace S22.Imap {
 					view.ContentType.Parameters[key];
 			}
 			builder.AppendLine(contentType);
+            if (view is Attachment)
+                builder.AppendLine(string.Format("Content-Disposition: {0}; filename=\"{1}\"",((Attachment)view).ContentDisposition.DispositionType, ((Attachment)view).Name));
 			builder.AppendLine("Content-Transfer-Encoding: base64");
 			if (!String.IsNullOrEmpty(view.ContentId))
-				builder.AppendLine("Content-Id: <" + view.ContentId + ">");
-			if (view is Attachment)
-				builder.AppendLine("Content-Disposition: attachment");
+                builder.AppendLine("Content-ID: <" + view.ContentId + ">");
+			
 			builder.AppendLine();
 			// Append the actual body part contents encoded as Base64.
 			using (MemoryStream memstream = new MemoryStream()) {
